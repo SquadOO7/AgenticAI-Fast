@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
-
+from utilities.help_func import LOGS
 from services.x_twitter.routes import router as x_routes
 
 
@@ -29,5 +29,5 @@ app.include_router(x_routes, prefix="/x", tags=["X_twitter"])
 @app.get("/")
 async def root():
     """Provides a simple welcome message."""
-    await LOGS.log_info("Root endpoint accessed.")
+    await LOGS.alog_info("Root endpoint accessed.")
     return JSONResponse({"message": "Root route for Agentic AI day"})

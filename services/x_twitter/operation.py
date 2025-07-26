@@ -54,12 +54,14 @@ def get_date_range_for_last_7_days():
 
     return start_time_str, end_time_str
 
-def fetch_bengaluru_feeds_from_x(BASE_URL, HEADERS):
+def fetch_bengaluru_feeds_from_x():
     """
     Fetches tweets related to Bengaluru for the specified categories
     from the last 7 days using X API v2.
     Handles pagination to retrieve up to 500 tweets.
     """
+    BASE_URL=glob.env.get("BASE_URL")
+    HEADERS={'authorization': f'Bearer {glob.env.get("X_BEARER_TOKEN")}'}
     all_feeds = []
     next_token = None
     page_count = 0

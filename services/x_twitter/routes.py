@@ -1,7 +1,8 @@
-from fastapi import HTTPException, status, APIRouter
+from fastapi import HTTPException, APIRouter
 from datetime import datetime, timedelta, timezone
 import json
 import os
+from utilities.help_func import LOGS
 from services.x_twitter.operation import get_user_id, get_user_tweets, fetch_bengaluru_feeds_from_x, publish_x_feeds
 
 router = APIRouter()
@@ -48,19 +49,14 @@ async def fetch_feeds(handle_name: str):
     with open("bangalore_feeds.json", "w", encoding="utf-8") as f:
         json.dump(existing_tweets, f, indent=2, ensure_ascii=False)
 
+    await LOGS.log_info({"message": f"Fetched {len(tweets)} tweets from {handle_name} accounts", "saved_to": "bangalore_feeds.json"})
+
     return {"message": f"Fetched {len(tweets)} tweets from {handle_name} accounts", "saved_to": "bangalore_feeds.json"}
 
 
 @router.get("/bengaluru-feeds", summary="Get Bengaluru City Feeds from X", response_description="A list of categorized tweets for Bengaluru.")
 async def get_bengaluru_city_feeds():
-    glob = GlobalState()
-    if not glob.env.get("BEARER_TOKEN"):
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="X API Bearer Token is not configured. Please replace 'YOUR_BEARER_TOKEN' in the script."
-        )
-
-    feeds = fetch_bengaluru_feeds_from_x(glob.env.get("BASE_URL"), {'authorization': f'Bearer {glob.env.get("X_BEARER_TOKEN")}'})
+    feeds = fetch_bengaluru_feeds_from_x()
     return {"message": "Successfully fetched Bengaluru feeds", "data": feeds, "count": len(feeds)}
 
 
