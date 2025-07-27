@@ -24,13 +24,14 @@ async def fetch_feeds(handle_name: str):
     user_id = await get_user_id(handle_name)
     tweets = await get_user_tweets(user_id, start_time_str, end_time_str)
 
+    geo = "12.9611,77.6387" 
     tweets.extend([
         {
-            "username": handle_name,
-            "id": tweet["id"],
             "text": tweet["text"],
-            "created_at": tweet["created_at"],
-            "lang": tweet["lang"]
+            "image_url": [],
+            "video_url": [],
+            "audio_url": [],
+            "geolocation": geo
         }
         for tweet in tweets
     ])
@@ -49,7 +50,7 @@ async def fetch_feeds(handle_name: str):
     with open("bangalore_feeds.json", "w", encoding="utf-8") as f:
         json.dump(existing_tweets, f, indent=2, ensure_ascii=False)
 
-    await LOGS.log_info({"message": f"Fetched {len(tweets)} tweets from {handle_name} accounts", "saved_to": "bangalore_feeds.json"})
+    await LOGS.alog_info({"message": f"Fetched {len(tweets)} tweets from {handle_name} accounts", "saved_to": "bangalore_feeds.json"})
 
     return {"message": f"Fetched {len(tweets)} tweets from {handle_name} accounts", "saved_to": "bangalore_feeds.json"}
 

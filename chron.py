@@ -1,10 +1,11 @@
 # chron.py
 import requests
-import time # Still needed for time.strftime if you want it
+import time 
 import sys
 import json
-import asyncio # <--- Import asyncio
-from utilities.help_func import LOGS # <--- Assuming LOGS is the instance of CustomLogger
+import asyncio 
+from utilities.help_func import LOGS
+
 
 # Make the function asynchronous
 async def hit_api_repeatedly(api_url, interval_seconds=15):
@@ -42,6 +43,7 @@ async def hit_api_repeatedly(api_url, interval_seconds=15):
         sys.exit(0) # Exit the program cleanly
 
 if __name__ == "__main__":
+    
     target_api_url = "http://127.0.0.1:8000/x/publish-random-feeds"
 
     # Run the asynchronous main function using asyncio.run()
